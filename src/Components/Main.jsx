@@ -21,7 +21,7 @@ const Main = () => {
     }
     
     useEffect(()=>{
-        fetchData();
+        fetchData(); 
     },[])
 
     const truncateString=(str,num)=>{
