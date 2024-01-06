@@ -9,20 +9,25 @@ const Main = () => {
 
     // Making the api call
 
-    async function fetchData(){
-        try{
-            const result=await axios.get(Requests.requestPopular);
-            const data=result.data.results;
-            console.log(data);
-            setMovies(data);
-        }catch(error){
-            console.log("Error occoured while fetching data")
-        }
-    }
+    // async function fetchData(){
+    //     try{
+    //         const result=await axios.get(Requests.requestPopular);
+    //         const data=result.data.results;
+    //         console.log(data);
+    //         setMovies(data);
+    //     }catch(error){
+    //         console.log("Error occoured while fetching data")
+    //     }
+    // }
     
-    useEffect(()=>{
-        fetchData(); 
-    },[])
+    // useEffect(()=>{
+    //     fetchData(); 
+    // },[])
+    useEffect(() => {
+        axios.get(Requests.requestPopular).then((response) => {
+          setMovies(response.data.results);
+        });
+      }, []);
 
     const truncateString=(str,num)=>{
         if(str?.length>num){
@@ -35,7 +40,7 @@ const Main = () => {
   return (
     <div className='w-full h-[550px] text-white'>
         <div className='w-full h-full'>
-            <div className='absolute w-full h-[550px] bg-gradient-to-tr from-black'></div>
+            <div className='absolute w-full h-[550px] bg-gradient-to-r from-black'></div>
              <img className='w-full h-full object-cover' src={ `https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`} alt={movie?.title}></img>
              <div className='absolute w-full top-[20%] p-4 md:p-8'>
                 <h1 className='text-3xl md:text-5xl font-bold'>{movie?.title}</h1>
