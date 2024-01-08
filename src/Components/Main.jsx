@@ -7,22 +7,6 @@ const Main = () => {
 
     const movie=movies[Math.floor(Math.random() * movies.length)]
 
-    // Making the api call
-
-    // async function fetchData(){
-    //     try{
-    //         const result=await axios.get(Requests.requestPopular);
-    //         const data=result.data.results;
-    //         console.log(data);
-    //         setMovies(data);
-    //     }catch(error){
-    //         console.log("Error occoured while fetching data")
-    //     }
-    // }
-    
-    // useEffect(()=>{
-    //     fetchData(); 
-    // },[])
     useEffect(() => {
         axios.get(Requests.requestPopular).then((response) => {
           setMovies(response.data.results);

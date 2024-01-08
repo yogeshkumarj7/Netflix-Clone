@@ -13,16 +13,37 @@ const SavedShows = () => {
     var slider = document.getElementById('slider');
     slider.scrollLeft = slider.scrollLeft - 500;
   };
+
   const slideRight = () => {
     var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft + 500;
+    slider.scrollLeft = slider.scrollLeft + 500; 
   };
 
-  useEffect(() => {
-    onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
-      setMovies(doc.data()?.savedShows);
+  // useEffect(() => {
+  //   onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+  //     setMovies(doc.data()?.savedShows);
+      
+  //   });
+  // }, [user?.email]);
+  useEffect(() => {  
+    const unsubscribe = onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+      // Check if the document exists before accessing its data
+      if (doc.exists()) {
+        setMovies(doc.data()?.savedShows || []);
+      } else {
+        // Handle the case where the document doesn't exist
+        console.log("Document does not exist");
+        setMovies([]); // or any other appropriate action
+      }
+    }, (error) => {
+      // Handle any errors that occur during the onSnapshot call
+      console.error("Error fetching document:", error);
     });
+  
+    // Cleanup function to unsubscribe when the component unmounts
+    return () => unsubscribe();
   }, [user?.email]);
+  
 
   const movieRef = doc(db, 'users', `${user?.email}`)
   const deleteShow = async (passedID) => {
@@ -50,7 +71,7 @@ const SavedShows = () => {
           className='w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide relative'
         >
           {movies.map((item) => (
-            <div
+            <div   
               key={item.id}
               className='w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] inline-block cursor-pointer relative p-2'
             >
@@ -63,7 +84,9 @@ const SavedShows = () => {
                 <p className='white-space-normal text-xs md:text-sm font-bold flex justify-center items-center h-full text-center'>
                   {item?.title}
                 </p>
-                <p onClick={()=> deleteShow(item.id)} className='absolute text-gray-300 top-4 right-4'><AiOutlineClose /></p>
+                <p 
+                onClick={()=> deleteShow(item.id)} 
+                className='absolute text-gray-300 top-4 right-4'><AiOutlineClose /></p>
               </div>
             </div>
           ))}
